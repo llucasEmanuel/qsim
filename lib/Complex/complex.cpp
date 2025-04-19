@@ -1,6 +1,7 @@
 #include "complex.h"
 #include <cmath>
 
+Complex::Complex() : real_(0), imag_(0) {}
 Complex::Complex(double real, double imag) : real_(real), imag_(imag) {}
 
 void Complex::set_real(double real) {
@@ -27,6 +28,10 @@ Complex Complex::operator-(const Complex& cpx) const {
     return Complex(this->real_ - cpx.get_real(), this->imag_ - cpx.get_imaginary());
 }
 
+Complex Complex::operator*(const Complex& cpx) const {
+    return Complex(this->real_ * cpx.get_real() - this->imag_ * cpx.get_imaginary(),
+                   this->real_ * cpx.get_imaginary() + this->imag_ * cpx.get_real());
+}
 
 PolarComplex::PolarComplex(double magnitude, double angle)
     : Complex(magnitude * cos(angle), magnitude * sin(angle)), mag_(magnitude), ang_(angle) {}
