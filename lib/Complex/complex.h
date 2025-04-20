@@ -3,6 +3,7 @@
 
 class Complex {
 public:
+    Complex();
     Complex(double, double);
 
     void set_real(double);
@@ -13,6 +14,7 @@ public:
 
     Complex operator+(const Complex&) const;
     Complex operator-(const Complex&) const;
+    Complex operator*(const Complex&) const;
 
 private:
     double real_;

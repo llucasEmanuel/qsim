@@ -1,0 +1,1 @@
+g++ lib/Complex/complex.cpp include/utils.cpp main.cpp -o main

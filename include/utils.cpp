@@ -11,7 +11,7 @@ void print(const Complex& cpx) {
         std::cout << '+';
     }
     if (imag != 0) std::cout << imag << 'i';
-    std::cout << '\n';
+    //std::cout << '\n';
     return;
 }
 

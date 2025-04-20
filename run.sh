@@ -1,1 +1,0 @@
-g++ main.cpp lib/Complex/complex.cpp include/utils.cpp -o main && ./main
