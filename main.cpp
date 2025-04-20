@@ -1,7 +1,6 @@
 #include "lib/Complex/complex.h"
 #include "lib/Matrix/matrix.h"
 #include "include/utils.h"
-#include <memory> // Para std::unique_ptr
 
 int main() {
 
@@ -13,11 +12,15 @@ int main() {
 
     print(pcpx1);
 
-    Matrix<float> mat(3, 4);
-    mat.set_element(3.14, 0, 2);
-    print(mat);
+    Matrix<float> mat1(2, 2);
+    Matrix<float> mat2(2, 2);
+    mat1.set_element(1, 1, 0);
+    mat2.set_element(1, 0, 0);
+    print((mat1 + (mat2*2)).transpose());
 
-    
+    SquareMatrix<int> sm(4);
+
+    print(sm);
 
     return 0;
 }

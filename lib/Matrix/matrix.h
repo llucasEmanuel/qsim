@@ -2,6 +2,7 @@
 #define MATRIX_H
 
 #include <iostream>
+#include <stdexcept>
 #include <vector>
 
 template <typename T>
@@ -17,12 +18,14 @@ public:
 
     void copy_from(const Matrix& mat);
 
-    Matrix<T> operator+(const Matrix& mat) const;
-    Matrix<T> operator-(const Matrix& mat) const;
-    Matrix<T> operator*(const Matrix& mat) const;
+    Matrix<T> transpose() const;
+
+    Matrix<T> operator+(const Matrix<T>& mat) const;
+    Matrix<T> operator-(const Matrix<T>& mat) const;
+    Matrix<T> operator*(const Matrix<T>& mat) const;
     Matrix<T> operator*(const T& scalar) const;
 
-private:
+protected:
     std::vector<std::vector<T>> mat_;
     const int rows_;
     const int cols_; 
@@ -57,14 +60,96 @@ int Matrix<T>::get_cols() const {
 
 template <typename T>
 void Matrix<T>::copy_from(const Matrix<T>& mat) {
-    if (this->cols_ != mat.get_cols() || this->rows_ != mat.get_rows()) return;
 
+    if (rows_ != mat.get_rows() || cols_ != mat.get_cols())
+        throw std::invalid_argument("Dimensions does not match\n");
+   
     for (int i = 0; i < rows_; i++) {
         for (int j = 0; j < cols_; j++) {
             this->mat_[i][j] = mat.get_element(i, j);
         }
     }
 }
+
+template <typename T>
+Matrix<T> Matrix<T>::transpose() const {
+    Matrix<T> result(cols_, rows_);
+
+    for (int i = 0; i < rows_; i++) {
+        for (int j = 0; j < cols_; j++) {
+            result.set_element(mat_[i][j], j, i);
+        }
+    }
+
+    return result;
+}
+
+template <typename T>
+Matrix<T> Matrix<T>::operator+(const Matrix<T>& mat) const {
+    if (rows_ != mat.get_rows() || cols_ != mat.get_cols())
+        throw std::invalid_argument("Dimensions does not match\n");
+
+    Matrix<T> result(rows_, cols_);
+    for (int i = 0; i < rows_; i++) {
+        for (int j = 0; j < cols_; j++) {
+            result.set_element(this->mat_[i][j] + mat.get_element(i, j), i, j);
+        }
+    }
+
+    return result;
+}
+
+template <typename T>
+Matrix<T> Matrix<T>::operator-(const Matrix<T>& mat) const {
+
+    if (rows_ != mat.get_rows() || cols_ != mat.get_cols())
+        throw std::invalid_argument("Dimensions does not match\n");
+
+    Matrix<T> result(rows_, cols_);
+    for (int i = 0; i < rows_; i++) {
+        for (int j = 0; j < cols_; j++) {
+            result.set_element(this->mat_[i][j] - mat.get_element(i, j), i, j);
+        }
+    }
+
+    return result;
+}
+
+template <typename T>
+Matrix<T> Matrix<T>::operator*(const Matrix<T>& mat) const {
+    
+    if (cols_ != mat.get_rows())
+        throw std::invalid_argument("Dimensions does not match\n");
+
+    int mat_cols = mat.get_cols();
+    Matrix<T> result(rows_, mat_cols);
+
+    for (int i = 0; i < rows_; i++) {
+        for (int j = 0; j < mat_cols; j++) {
+            T sum = T();
+            for (int k = 0; k < cols_; k++) {
+                sum += mat_[i][k] * mat.get_element(k, j);
+            }
+            result.set_element(sum, i, j);
+        }
+    }
+
+    return result;
+}
+
+template <typename T>
+Matrix<T> Matrix<T>::operator*(const T& scalar) const {
+    Matrix<T> result(rows_, cols_);
+
+    for (int i = 0; i < rows_; i++) {
+        for (int j = 0; j < cols_; j++) {
+            result.set_element(mat_[i][j] * scalar, i, j);
+        }
+    }
+
+    return result;
+}
+
 
 
 template <typename T>
@@ -77,4 +162,20 @@ void print(const Matrix<T>& mat) {
     }
 }
 
-#endif /* MATRIX_H */
+template <typename T>
+class SquareMatrix : public Matrix<T> {
+public:
+    SquareMatrix(const int size);
+    
+    int get_size() const;
+};
+
+template <typename T>
+SquareMatrix<T>::SquareMatrix(const int size) : Matrix<T>(size, size) {};
+
+template <typename T>
+int SquareMatrix<T>::get_size() const {
+    return this->get_rows();
+}
+
+#endif 
