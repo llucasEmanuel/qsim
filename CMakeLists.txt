@@ -21,7 +21,10 @@ else()
     message(WARNING "OpenMP not found. Running in serial mode.")
 endif()
 
-add_library(QuantumLib src/base/quantum_state.cpp)
+add_library(QuantumLib 
+src/base/quantum_state.cpp 
+src/base/quantum_gate.cpp
+)
 
 target_include_directories(QuantumLib PUBLIC include)
 
@@ -36,6 +39,6 @@ if(OpenMP_CXX_FOUND)
     target_link_libraries(QuantumLib PUBLIC OpenMP::OpenMP_CXX)
 endif()
 
-add_executable(qsim_exec src/base/example/tensor_product.cpp)
+add_executable(qsim_exec src/base/examples/bell_state_generator.cpp)
 
 target_link_libraries(qsim_exec PRIVATE QuantumLib)
