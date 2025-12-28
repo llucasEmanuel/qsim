@@ -19,8 +19,4 @@ public:
 
 QuantumState tensor_product(const QuantumState& state1, const QuantumState& state2); 
 
-const Eigen::MatrixXcd tensor_product(const Eigen::MatrixXcd& gate1, const Eigen::MatrixXcd& gate2);
-
-const Eigen::MatrixXcd tensor_product(const Eigen::MatrixXcd& gate, int n); // Auto tensor product
-
 #endif
