@@ -3,6 +3,7 @@
 #include <cmath>
 #include <stdexcept>
 #include <cctype>
+#include <unsupported/Eigen/KroneckerProduct>
 
 namespace Gates {
     const Eigen::Matrix2cd I = Eigen::Matrix2cd::Identity();
@@ -56,10 +57,36 @@ QuantumGate::QuantumGate(Eigen::MatrixXcd matrix) {
     this->matrix = matrix;
 }
 
-Eigen::MatrixXcd QuantumGate::get_matrix() {
+Eigen::MatrixXcd QuantumGate::get_matrix() const {
     return this->matrix;
 }
 
-QuantumGate QuantumGate::get_inverse() {
-    return QuantumGate(this->matrix.inverse());
+QuantumGate QuantumGate::get_inverse() const {
+    return QuantumGate(this->matrix.adjoint());
+}
+
+QuantumState QuantumGate::operator*(const QuantumState& state) {
+    if (this->get_matrix().cols() != state.get_state_vector().rows()) {
+        throw std::invalid_argument("Incompatible dimensions between gate and state: ");
+    }
+    return QuantumState(static_cast<Eigen::VectorXcd>(this->get_matrix() * state.get_state_vector()), false);
+}
+
+QuantumGate QuantumGate::operator*(const QuantumGate& gate) {
+    if (this->get_matrix().cols() != gate.get_matrix().rows()) {
+        throw std::invalid_argument("Incompatible dimensions between gates: ");
+    }
+    return QuantumGate(static_cast<Eigen::MatrixXcd>(this->get_matrix() * gate.get_matrix()));
+}
+
+QuantumGate tensor_product(const QuantumGate& gate1, const QuantumGate& gate2) {
+    return QuantumGate(Eigen::kroneckerProduct(gate1.get_matrix(), gate2.get_matrix()).eval());
+}
+
+QuantumGate tensor_product(const QuantumGate& gate, int n) {
+    QuantumGate result = gate;
+    for (int i = 1; i < n; i++) {
+        result = tensor_product(result, gate);
+    }
+    return result;
 }
