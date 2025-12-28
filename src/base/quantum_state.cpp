@@ -49,15 +49,3 @@ QuantumState tensor_product(const QuantumState& state1, const QuantumState& stat
     Eigen::VectorXcd state_vector = Eigen::kroneckerProduct(state1.get_state_vector(), state2.get_state_vector()).eval();
     return QuantumState(state_vector, false);
 } 
-
-const Eigen::MatrixXcd tensor_product(const Eigen::MatrixXcd& gate1, const Eigen::MatrixXcd& gate2) {
-    return Eigen::kroneckerProduct(gate1, gate2).eval();
-}
-
-const Eigen::MatrixXcd tensor_product(const Eigen::MatrixXcd& gate, int n) {
-    Eigen::MatrixXcd result = gate;
-    for (int i = 1; i < n; i++) {
-        result = Eigen::kroneckerProduct(result, gate).eval();
-    }
-    return result;
-}
