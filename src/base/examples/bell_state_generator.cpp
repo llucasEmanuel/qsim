@@ -8,21 +8,24 @@ int main() {
     QuantumGate had("h");
     QuantumGate id("I");
 
-    Eigen::MatrixXcd hi = tensor_product(had.get_matrix(), id.get_matrix());
+    QuantumGate hi = tensor_product(had, id);
+    
     QuantumGate HI(hi);
 
-    Eigen::VectorXcd state_vec = HI.get_matrix() * s.get_state_vector();
+    s = HI * s;
     
     QuantumGate cnot("CNOT");
 
-    state_vec = cnot.get_matrix() * state_vec;
+    s = cnot * s;
 
-    std::cout << state_vec << "\n\n";
+    std::cout << s.get_state_vector() << "\n\n";
 
     QuantumGate HI_inv = HI.get_inverse();
     cnot = cnot.get_inverse();
-    state_vec = HI_inv.get_matrix() * cnot.get_matrix() * state_vec;
-    std::cout << state_vec << '\n';
+    
+    s = HI_inv * cnot * s;
+
+    std::cout << s.get_state_vector() << '\n';
 
     return 0;
 }
