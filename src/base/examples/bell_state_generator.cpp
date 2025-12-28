@@ -2,17 +2,26 @@
 #include "../quantum_state.hpp"
 #include "../quantum_gate.hpp"
 
-using namespace Eigen;
-
 int main() {
     QuantumState s(2);
 
-    Matrix4cd HI = tensor_product(Gates::H, Gates::I);
+    QuantumGate had("h");
+    QuantumGate id("I");
 
-    Eigen::VectorXcd state_vec = HI * s.get_state_vector();
+    Eigen::MatrixXcd hi = tensor_product(had.get_matrix(), id.get_matrix());
+    QuantumGate HI(hi);
+
+    Eigen::VectorXcd state_vec = HI.get_matrix() * s.get_state_vector();
     
-    state_vec = Gates::CNOT * state_vec;
+    QuantumGate cnot("CNOT");
 
+    state_vec = cnot.get_matrix() * state_vec;
+
+    std::cout << state_vec << "\n\n";
+
+    QuantumGate HI_inv = HI.get_inverse();
+    cnot = cnot.get_inverse();
+    state_vec = HI_inv.get_matrix() * cnot.get_matrix() * state_vec;
     std::cout << state_vec << '\n';
 
     return 0;
