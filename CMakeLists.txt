@@ -24,6 +24,7 @@ endif()
 add_library(QuantumLib 
 src/base/quantum_state.cpp 
 src/base/quantum_gate.cpp
+src/base/quantum_circuit.cpp
 )
 
 target_include_directories(QuantumLib PUBLIC include)
@@ -39,6 +40,6 @@ if(OpenMP_CXX_FOUND)
     target_link_libraries(QuantumLib PUBLIC OpenMP::OpenMP_CXX)
 endif()
 
-add_executable(qsim_exec src/base/examples/bell_state_generator.cpp)
+add_executable(qsim_exec src/base/examples/qrng.cpp)
 
 target_link_libraries(qsim_exec PRIVATE QuantumLib)
