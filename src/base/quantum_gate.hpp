@@ -23,14 +23,15 @@ private:
     Eigen::MatrixXcd matrix;
 
 public:
+    QuantumGate();
     QuantumGate(std::string gate_name);
     QuantumGate(Eigen::MatrixXcd matrix);
 
     Eigen::MatrixXcd get_matrix() const;
     QuantumGate get_inverse() const;
 
-    QuantumState operator*(const QuantumState& state);
-    QuantumGate operator*(const QuantumGate& gate);
+    QuantumState operator*(const QuantumState& state) const;
+    QuantumGate operator*(const QuantumGate &gate) const;
 };
 
 QuantumGate tensor_product(const QuantumGate& gate1, const QuantumGate& gate2);

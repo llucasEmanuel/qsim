@@ -34,6 +34,10 @@ namespace Gates {
                                                                 };
 }
 
+QuantumGate::QuantumGate() {
+    this->matrix = Gates::I;
+}
+
 QuantumGate::QuantumGate(std::string gate_name) {
     std::string original_gate_name = gate_name;
     // & guarantees the modification of the real char instead of its copy
@@ -65,14 +69,14 @@ QuantumGate QuantumGate::get_inverse() const {
     return QuantumGate(this->matrix.adjoint());
 }
 
-QuantumState QuantumGate::operator*(const QuantumState& state) {
+QuantumState QuantumGate::operator*(const QuantumState& state) const {
     if (this->get_matrix().cols() != state.get_state_vector().rows()) {
         throw std::invalid_argument("Incompatible dimensions between gate and state: ");
     }
     return QuantumState(static_cast<Eigen::VectorXcd>(this->get_matrix() * state.get_state_vector()), false);
 }
 
-QuantumGate QuantumGate::operator*(const QuantumGate& gate) {
+QuantumGate QuantumGate::operator*(const QuantumGate& gate) const {
     if (this->get_matrix().cols() != gate.get_matrix().rows()) {
         throw std::invalid_argument("Incompatible dimensions between gates: ");
     }
