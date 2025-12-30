@@ -35,6 +35,15 @@ QuantumState::~QuantumState() {
     std::cout << "Destroying " << num_qubits << " qubit state.\n";
 }
 
+Eigen::RowVectorXcd QuantumState::adjoint() const {
+    return this->get_state_vector().adjoint();
+}
+
+Eigen::MatrixXcd QuantumState::density_matrix() const {
+    return this->get_state_vector() * this->get_state_vector().adjoint();
+}
+
+
 int QuantumState::get_num_qubits() const {
     return this->num_qubits;
 }

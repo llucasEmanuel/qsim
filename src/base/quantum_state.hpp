@@ -13,6 +13,9 @@ public:
     QuantumState(const Eigen::VectorXcd& state_vector, bool normalize);
     ~QuantumState();
 
+    Eigen::RowVectorXcd adjoint() const;
+    Eigen::MatrixXcd density_matrix() const;
+
     int get_num_qubits() const;
     const Eigen::VectorXcd& get_state_vector() const;
 };
