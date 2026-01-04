@@ -16,8 +16,6 @@ namespace Gates {
     extern const std::map<std::string, Eigen::MatrixXcd> basic_gates;
 }
 
-// TODO:: add operator for H*s
-
 class QuantumGate {
 private:
     Eigen::MatrixXcd matrix;
@@ -32,6 +30,18 @@ public:
 
     QuantumState operator*(const QuantumState& state) const;
     QuantumGate operator*(const QuantumGate &gate) const;
+};
+
+class ControlledGate : public QuantumGate {
+private:
+    int control_qubit;
+
+public:
+    ControlledGate();
+    ControlledGate(const std::string& gate_name, const int& control_qubit);
+    ControlledGate(const QuantumGate& gate, const int& control_qubit);
+
+    int get_control_qubit() const;
 };
 
 QuantumGate tensor_product(const QuantumGate& gate1, const QuantumGate& gate2);

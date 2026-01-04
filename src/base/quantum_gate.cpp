@@ -83,6 +83,26 @@ QuantumGate QuantumGate::operator*(const QuantumGate& gate) const {
     return QuantumGate(static_cast<Eigen::MatrixXcd>(this->get_matrix() * gate.get_matrix()));
 }
 
+/* (--- CONTROLLED GATE ---) */
+
+ControlledGate::ControlledGate(): QuantumGate(), control_qubit(0) {}
+
+ControlledGate::ControlledGate(const std::string& gate_name, const int& qubit):
+    QuantumGate(gate_name),
+    control_qubit(qubit)
+{}
+
+ControlledGate::ControlledGate(const QuantumGate& gate, const int& qubit):
+    QuantumGate(gate),
+    control_qubit(qubit)
+{}
+
+int ControlledGate::get_control_qubit() const {
+    return this->control_qubit;
+}
+
+/* (\--- CONTROLLED GATE ---\) */
+
 QuantumGate tensor_product(const QuantumGate& gate1, const QuantumGate& gate2) {
     return QuantumGate(Eigen::kroneckerProduct(gate1.get_matrix(), gate2.get_matrix()).eval());
 }
