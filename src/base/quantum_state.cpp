@@ -32,7 +32,7 @@ QuantumState::QuantumState(const Eigen::VectorXcd& state_vector, bool normalize)
 }
 
 QuantumState::~QuantumState() {
-    std::cout << "Destroying " << num_qubits << " qubit state.\n";
+    // std::cout << "Destroying " << num_qubits << " qubit state.\n";
 }
 
 Eigen::RowVectorXcd QuantumState::adjoint() const {
