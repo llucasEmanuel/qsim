@@ -1,5 +1,8 @@
 #include "quantum_circuit.hpp"
 #include <stdexcept>
+#include <cctype>
+#include <cmath>
+#include <complex>
 
 QuantumCircuit::QuantumCircuit(int num_qubits) 
 : curr_state(QuantumState(num_qubits)) {}
@@ -10,6 +13,7 @@ QuantumCircuit::QuantumCircuit(const QuantumState& initial_state)
 QuantumCircuit::QuantumCircuit(const Eigen::VectorXcd& initial_state_vector) 
 : curr_state(QuantumState(initial_state_vector, true)) {}
 
+/* TODO: optimize spacial complexity */
 static QuantumGate generate_global_gate(const QuantumGate& gate, int num_qubits, const std::vector<std::size_t>& qubits) {
     QuantumGate applied_gates[num_qubits]; // initialized with I gate
 
@@ -48,6 +52,14 @@ void QuantumCircuit::apply_gate(const Eigen::MatrixXcd& gate_matrix, const std::
     this->apply_gate(QuantumGate(gate_matrix), qubits);
 }
 
+// std::map<std::string, double> QuantumCircuit::measure_with(const char& observable) {
+//     switch (std::toupper(observable)) {
+//         case 'Z': // autoestados 0 e 1, autovalores +1 e -1
+
+//         case 'X': // autoestados + e -, autovalores +1 e -1
+//     }
+// }
+
 QuantumState QuantumCircuit::get_current_state() const {
     return this->curr_state;
 }
@@ -55,5 +67,16 @@ QuantumState QuantumCircuit::get_current_state() const {
 std::vector<QuantumGate> QuantumCircuit::get_gates_applied() const {
     return this->gate_list;
 }
+
+double QuantumCircuit::basis_state_probability(const std::size_t& qubit) const {
+    if (qubit < 0 || qubit >= this->curr_state.get_state_vector().rows()) {
+        throw std::out_of_range("Qubit " + std::to_string(qubit) + " out of range");
+    }
+
+    std::complex<double> prob_amp = this->curr_state.get_state_vector()[qubit];
+
+    return std::pow(std::abs(prob_amp), 2);
+}
+
 
 
